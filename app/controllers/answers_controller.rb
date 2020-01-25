@@ -1,5 +1,6 @@
 class AnswersController < ApplicationController
-  before_action :load_answer, only: [:show]
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :load_answer, only: [:show, :destroy]
   before_action :load_question, only: [:new, :create]
 
   def index
@@ -14,11 +15,21 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.new(answer_params)
+    @answer.user = current_user
 
     if @answer.save
-      redirect_to @answer
+      redirect_to @question, notice: 'Your answer successfully created.'
     else
-      render :new
+      redirect_to @question, alert: 'The answer is invalid.'
+    end
+  end
+
+  def destroy
+    if @answer.user == current_user
+      @answer.destroy
+      redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted.'
+    else
+      redirect_to answer_path(@answer), notice: 'User is not the author of the answer.'
     end
   end
 
