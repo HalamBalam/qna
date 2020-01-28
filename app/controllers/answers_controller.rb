@@ -1,4 +1,7 @@
 class AnswersController < ApplicationController
+
+  include ApplicationHelper
+
   before_action :authenticate_user!, except: [:index, :show]
   before_action :load_answer, only: [:show, :destroy]
   before_action :load_question, only: [:new, :create]
@@ -25,7 +28,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if @answer.user == current_user
+    if user_has_permission_to_destroy?(@answer)
       @answer.destroy
       redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted.'
     else

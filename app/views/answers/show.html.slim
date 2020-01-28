@@ -1,4 +1,4 @@
-= render 'shared/errors', resource: @answer
+= render 'form'
 
-p= @answer.body
-=link_to 'Delete answer', answer_path(@answer), method: :delete
+- if user_has_permission_to_destroy?(@answer)
+  = link_to 'Delete answer', answer_path(@answer), method: :delete

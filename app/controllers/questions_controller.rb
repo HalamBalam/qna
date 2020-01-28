@@ -1,4 +1,7 @@
 class QuestionsController < ApplicationController
+
+  include ApplicationHelper
+
   before_action :authenticate_user!, except: [:index, :show]
   before_action :load_question, only: [:show, :destroy]
 
@@ -26,7 +29,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if @question.user == current_user
+    if user_has_permission_to_destroy?(@question)
       @question.destroy
       redirect_to questions_path, notice: 'Your question successfully deleted.'
     else

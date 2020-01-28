@@ -5,25 +5,31 @@ feature 'User can delete his question', %q{
 } do
 
   given(:user) { create(:user) }
+  given!(:questions) { create_list(:question, 2) }
 
-  background { sign_in(user) }
+  describe 'Authenticated user' do
+    background { sign_in(questions[0].user) }
 
-  scenario 'User can delete his question' do
-    question = create_question(user)
+    scenario 'can delete his question' do
+      visit question_path(questions[0])
+      click_on 'Delete question'
 
-    visit question_path(question)
-    click_on 'Delete question'
+      expect(page).to have_content 'Your question successfully deleted.'
+      expect(page).to_not have_content questions[0].body
+    end
 
-    expect(page).to have_content 'Your question successfully deleted.'
+    scenario "could not delete another user's question" do
+      visit question_path(questions[1])
+
+      expect(page).to_not have_content 'Delete question'
+    end
   end
 
-  scenario "User could not delete another user's question" do
-    question = create(:question)
-
-    visit question_path(question)
-    click_on 'Delete question'
-
-    expect(page).to have_content 'User is not the author of the question.'
+  describe 'Unauthenticated user' do
+    scenario 'could not delete questions' do
+      visit question_path(questions[0])
+      expect(page).to_not have_content 'Delete question'  
+    end
   end
   
 end
