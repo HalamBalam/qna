@@ -18,6 +18,7 @@ feature 'User can view question with answers', %q{
   scenario 'Unauthenticated user can view a question with the answers' do
     visit question_path(answer.question)
 
+    expect(page).to have_content answer.question.body
     expect(page).to have_content answer.body
   end
 
