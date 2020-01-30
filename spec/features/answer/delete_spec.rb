@@ -13,6 +13,8 @@ feature 'User can delete his answer', %q{
 
     scenario 'can delete his answer' do
       visit answer_path(answers[0])
+      expect(page).to have_content answers[0].body
+
       click_on 'Delete answer'
 
       expect(page).to have_content 'Your answer successfully deleted.'

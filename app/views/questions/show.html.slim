@@ -3,12 +3,13 @@
 h1= @question.title
 p= @question.body
 
-- if user_has_permission_to_destroy?(@question)
+- if current_user&.is_author?(@question)
   =link_to 'Delete question', question_path(@question), method: :delete
 
-h2= 'Answers'
+h2 'Answers'
 
 table
   = render @question.answers
 
-= render 'answers/form', question: @question, answer: @answer
+- if user_signed_in?
+  = render 'answers/form', question: @question, answer: @answer

@@ -54,28 +54,18 @@ RSpec.describe AnswersController, type: :controller do
       context 'with valid attributes' do
 
         it 'saves a new answer in the database' do
-          expect { post :create, params: { 
-                                          question_id: question,
-                                          answer: attributes_for(:answer),
-                                          user_id: user 
-                                          } }.to change(Answer, :count).by(1)
+          expect { post :create,
+                   params: { question_id: question, answer: attributes_for(:answer), user_id: user }
+                 }.to change(Answer, :count).by(1)
         end
 
         it 'has a valid question' do
-          post :create, params: { 
-                                  question_id: question,
-                                  answer: attributes_for(:answer),
-                                  user_id: user
-                                }
+          post :create, params: { question_id: question, answer: attributes_for(:answer), user_id: user }
           expect(assigns(:answer).question).to eq question  
         end
 
         it 'redirects to question' do
-          post :create, params: { 
-                                  question_id: question,
-                                  answer: attributes_for(:answer),
-                                  user_id: user
-                                }
+          post :create, params: { question_id: question, answer: attributes_for(:answer), user_id: user }
           expect(response).to redirect_to assigns(:question)
         end
       end
@@ -83,25 +73,25 @@ RSpec.describe AnswersController, type: :controller do
       context 'with invalid attributes' do
 
         it 'does not save the answer' do
-          expect { post :create, params: {
-                                          question_id: question,
-                                          answer: attributes_for(:answer, :invalid),
-                                          user_id: user
-                                         } }.to_not change(Answer, :count)  
+          expect { post :create,
+                   params: { question_id: question, answer: attributes_for(:answer, :invalid), user_id: user }
+                 }.to_not change(Answer, :count)  
         end
 
         it 'redirects to question' do
-          post :create, params: { 
-                                  question_id: question,
-                                  answer: attributes_for(:answer, :invalid),
-                                  user_id: user
-                                }
+          post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), user_id: user }
           expect(response).to redirect_to assigns(:question)
         end
       end
    end
 
     context 'unauthenticated user' do
+
+      it 'does not save the answer' do
+        expect { post :create, 
+                 params: { question_id: question, answer: attributes_for(:answer, :invalid), user_id: user }
+               }.to_not change(Answer, :count)  
+      end
 
       it 'redirects to sign in page' do
         post :create, params: { question_id: question, answer: attributes_for(:answer), user_id: user }
@@ -146,6 +136,10 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'unauthenticated user' do
+      it 'does not delete the answer' do
+        expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
+      end
+
       it 'redirects to sign in page' do
         delete :destroy, params: { id: answer }
         expect(response).to redirect_to new_user_session_path

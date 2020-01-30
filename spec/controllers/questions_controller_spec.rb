@@ -62,7 +62,9 @@ RSpec.describe QuestionsController, type: :controller do
       
       context 'with valid attributes' do
         it 'saves a new question in the database' do
-          expect { post :create, params: { question: attributes_for(:question), user_id: user } }.to change(Question, :count).by(1)
+          expect { post :create,
+                   params: { question: attributes_for(:question), user_id: user }
+                 }.to change(Question, :count).by(1)
         end
 
         it 'redirects to show view' do
@@ -73,7 +75,9 @@ RSpec.describe QuestionsController, type: :controller do
 
       context 'with invalid attributes' do
         it 'does not save the question' do
-          expect { post :create, params: { question: attributes_for(:question, :invalid), user_id: user } }.to_not change(Question, :count)  
+          expect { post :create,
+                   params: { question: attributes_for(:question, :invalid), user_id: user }
+                 }.to_not change(Question, :count)  
         end
 
         it 're-renders new view' do
@@ -84,6 +88,12 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'unauthenticated user' do
+      it 'does not save the question' do
+        expect { post :create,
+                 params: { question: attributes_for(:question, :invalid), user_id: user }
+               }.to_not change(Question, :count)  
+      end
+
       it 'redirects to sign in page' do
         post :create, params: { question: attributes_for(:question), user_id: user }
         expect(response).to redirect_to new_user_session_path
@@ -125,6 +135,10 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'unauthenticated user' do
+      it 'does not delete the question' do
+        expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
+      end
+        
       it 'redirects to sign in page' do
         delete :destroy, params: { id: question }
         expect(response).to redirect_to new_user_session_path
