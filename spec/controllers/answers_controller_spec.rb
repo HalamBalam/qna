@@ -64,6 +64,11 @@ RSpec.describe AnswersController, type: :controller do
           expect(assigns(:answer).question).to eq question  
         end
 
+        it 'has a valid user' do
+          post :create, params: { question_id: question, answer: attributes_for(:answer), user_id: user }
+          expect(assigns(:answer).user).to eq user 
+        end
+
         it 'redirects to question' do
           post :create, params: { question_id: question, answer: attributes_for(:answer), user_id: user }
           expect(response).to redirect_to assigns(:question)

@@ -3,10 +3,10 @@
 h1= @question.title
 p= @question.body
 
-- if current_user&.is_author?(@question)
+- if current_user&.author?(@question)
   =link_to 'Delete question', question_path(@question), method: :delete
 
-h2 'Answers'
+h2 Answers
 
 table
   = render @question.answers

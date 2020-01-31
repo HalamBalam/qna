@@ -9,9 +9,9 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
 
-  it { expect(answer.user.is_author?(answer)).to be true }
-  it { expect(user.is_author?(answer)).to be false }
-  it { expect(question.user.is_author?(question)).to be true }
-  it { expect(user.is_author?(question)).to be false }
+  it { expect(answer.user).to be_author(answer) }
+  it { expect(user).not_to be_author(answer) }
+  it { expect(question.user).to be_author(question) }
+  it { expect(user).not_to be_author(question) }
 
 end

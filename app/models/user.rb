@@ -7,7 +7,7 @@ class User < ApplicationRecord
   has_many :questions
   has_many :answers
 
-  def is_author?(item)
+  def author?(item)
      item.user == self
   end
 
