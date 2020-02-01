@@ -8,7 +8,7 @@ class User < ApplicationRecord
   has_many :answers
 
   def author?(item)
-     item.user == self
+     item.user_id == id
   end
 
 end

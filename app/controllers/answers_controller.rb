@@ -21,7 +21,8 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to @question, notice: 'Your answer successfully created.'
     else
-      redirect_to @question, alert: 'The answer is invalid.'
+      flash.now[:alert] = 'The answer is invalid.' 
+      render 'questions/show'
     end
   end
 
