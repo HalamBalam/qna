@@ -1,0 +1,15 @@
+= render 'shared/errors', resource: @question
+
+h1= @question.title
+p= @question.body
+
+- if current_user&.author?(@question)
+  =link_to 'Delete question', question_path(@question), method: :delete
+
+h2 Answers
+
+table
+  = render @question.answers
+
+- if user_signed_in?
+  = render 'answers/form', question: @question, answer: @answer
