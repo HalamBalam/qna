@@ -7,7 +7,7 @@ feature 'User can create an answer', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in(user)
       visit question_path(question)
@@ -19,13 +19,16 @@ feature 'User can create an answer', %q{
       fill_in 'Body', with: 'New answer'
       click_on 'Answer'
 
-      expect(page).to have_content 'Your answer successfully created.'
-      expect(page).to have_content 'New answer'
+      expect(current_path).to eq question_path(question)
+
+      within '.answers' do
+        expect(page).to have_content 'New answer'
+      end
     end
 
     scenario 'could not create invalid answer' do
       click_on 'Answer'
-      expect(page).to have_content "The answer is invalid."
+      expect(page).to have_content "Body can't be blank"
     end
   end
 

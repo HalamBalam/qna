@@ -4,6 +4,7 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
   let(:user) { create(:user) }
 
+
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3) }
 
@@ -18,6 +19,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
+
   describe 'GET #show' do
     before { get :show, params: { id: question } }
 
@@ -25,11 +27,15 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question)).to eq question
     end
 
+    it 'assings new answer for question' do
+      expect(assigns(:answer)).to be_a_new(Answer)
+    end
+
     it 'renders show view' do
       expect(response).to render_template :show  
     end
-
   end
+
 
   describe 'GET #new' do
 
@@ -54,6 +60,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
   end
+
 
   describe 'POST #create' do
 
@@ -101,6 +108,78 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
   end
+
+
+  describe 'PATCH #update' do
+    let!(:question) { create(:question) }
+
+    context 'authenticated user' do
+      context 'user is the author of the question' do
+        before { login(question.user) }
+
+        context 'with valid attributes' do
+          it 'changes question attributes' do
+            patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+            question.reload
+
+            expect(question.title).to eq 'new title'
+            expect(question.body).to eq 'new body'
+          end
+
+          it 'renders update view' do
+            patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js  
+            expect(response).to render_template :update
+          end
+        end
+
+        context 'with invalid attributes' do
+          it 'does not change question attributes' do
+            expect do
+              patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+              question.reload
+            end.to_not change(question, :body)
+          end
+
+          it 'renders update view' do
+            patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js  
+            expect(response).to render_template :update
+          end
+        end
+      end
+
+      context 'user is not the author of the question' do
+        before { login(user) }
+
+        it 'does not change question attributes' do
+          expect do
+            patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+            question.reload
+          end.to_not change(question, :body)
+        end
+
+        it 'redirects to question' do
+          patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+          expect(response).to redirect_to assigns(:question)
+        end
+      end
+    end
+
+    context 'unauthenticated user' do
+      it 'does not change question attributes' do
+        expect do
+          patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+          question.reload
+        end.to_not change(question, :body)
+      end
+
+      it 'returnes unauthorized error' do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
+        expect(response).to be_unauthorized
+      end
+    end
+
+  end
+
 
   describe 'DELETE #delete' do
     let!(:question) { create(:question) }
