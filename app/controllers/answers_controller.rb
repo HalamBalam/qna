@@ -38,8 +38,7 @@ class AnswersController < ApplicationController
     @question = @answer.question
 
     if current_user&.author?(@question)
-      @question.best_answer = @answer
-      @question.save
+      @answer.best!
     end
 
     render 'update'

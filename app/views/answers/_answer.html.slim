@@ -6,11 +6,11 @@ div class="answer-#{answer.id}"
       = " | "
       =link_to 'Delete', answer_path(answer), remote: true, method: :delete, class: 'delete-answer-link', data: { answer_id: answer.id }
 
-  - if current_user&.author?(@question) && answer != @question.best_answer
+  - if current_user&.author?(@question) && !answer.best?
     =link_to 'Mark as best', mark_as_best_answer_path(answer), remote: true, method: :patch
 
-  - if answer == @question.best_answer
-    = "This answer was marked as best!"
+  - if answer.best?
+    = "This answer is the best!"
 
   = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
     = f.label :body, 'Your answer'

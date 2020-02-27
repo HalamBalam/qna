@@ -23,7 +23,7 @@ feature 'User can choose the best answer', %q{
       
       within ".answer-#{answer1.id}" do
         click_on 'Mark as best'
-        expect(page).to have_content 'This answer was marked as best!'
+        expect(page).to have_content 'This answer is the best!'
         expect(page).to_not have_link 'Mark as best'
       end
 
@@ -32,7 +32,7 @@ feature 'User can choose the best answer', %q{
       end
 
       within '.answers' do
-        expect(all('div').first).to have_content 'This answer was marked as best!'
+        expect(all('div').first).to have_content 'This answer is the best!'
       end
     end
 

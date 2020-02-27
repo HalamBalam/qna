@@ -23,7 +23,7 @@ h2 Answers
 .answers
   .answer-errors
     = render 'shared/errors', resource: @answer
-  = render @question.ordered_answers, question: @question
+  = render @question.answers, question: @question
 
 - if user_signed_in?
   = render 'answers/form', question: @question, answer: @answer

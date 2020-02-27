@@ -235,8 +235,8 @@ RSpec.describe AnswersController, type: :controller do
         
         it 'marks the answer as the best' do
           patch :mark_as_best, params: { id: answer }, format: :js
-          question.reload
-          expect(question.best_answer).to eq answer  
+          answer.reload
+          expect(answer).to be_best  
         end
 
         it 'renders update view' do
@@ -250,8 +250,8 @@ RSpec.describe AnswersController, type: :controller do
 
         it 'does not mark the answer as the best' do
           patch :mark_as_best, params: { id: answer }, format: :js
-          question.reload
-          expect(question.best_answer).to_not eq answer
+          answer.reload
+          expect(answer).not_to be_best
         end
 
         it 'renders update view' do
@@ -265,8 +265,8 @@ RSpec.describe AnswersController, type: :controller do
     context 'unauthenticated user' do
       it 'does not mark the answer as the best' do
         patch :mark_as_best, params: { id: answer }, format: :js
-        question.reload
-        expect(question.best_answer).to_not eq answer
+        answer.reload
+        expect(answer).not_to be_best
       end
 
       it 'returnes unauthorized error' do
