@@ -37,7 +37,7 @@ class AnswersController < ApplicationController
   def mark_as_best
     @question = @answer.question
 
-    if current_user&.author?(@question)
+    if current_user&.author?(@question) && !@answer.best?
       @answer.best!
     end
 
