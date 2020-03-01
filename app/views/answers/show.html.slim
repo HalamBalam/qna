@@ -1,3 +1,6 @@
+.answer-errors
+  = render 'shared/errors', resource: @answer
+  
 = render 'form'
 
 - if current_user&.author?(@answer)
