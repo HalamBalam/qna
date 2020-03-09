@@ -122,6 +122,18 @@ RSpec.describe AnswersController, type: :controller do
           expect(answer.body).to eq 'new body'
         end
 
+        it 'attaches new files' do
+          expect do
+            files = [
+              Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/rails_helper.rb'))),
+              Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/spec_helper.rb')))
+            ]
+            patch :update, params: { id: answer, answer: { body: answer.body, files: files } }, format: :js
+            answer.reload
+
+          end.to change(answer.files, :count).by(2)
+        end
+
         it 'renders update view' do
           patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js  
           expect(response).to render_template :update
@@ -271,6 +283,44 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'returnes unauthorized error' do
         patch :mark_as_best, params: { id: answer }, format: :js
+        expect(response).to be_unauthorized
+      end
+    end
+
+  end
+
+
+  describe 'DELETE #delete_file' do
+    let!(:answer) { create(:answer, :with_attached_files) }
+
+    context 'user is the author of the answer' do
+      before { login(answer.user) }
+
+      it 'deletes a file' do
+        expect { delete :delete_file, params: { id: answer, file_id: answer.files.first }, format: :js }.to change(answer.files, :count).by(-1)  
+      end
+
+      it 'renders update view' do
+        delete :delete_file, params: { id: answer, file_id: answer.files.first }, format: :js  
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'user is not the author of the answer' do
+      before { login(user) }
+
+      it 'does not delete a file' do
+        expect { delete :delete_file, params: { id: answer, file_id: answer.files.first }, format: :js }.to_not change(answer.files, :count)
+      end
+    end
+
+    context 'unauthenticated user' do
+      it 'does not delete a file' do
+        expect { delete :delete_file, params: { id: answer, file_id: answer.files.first }, format: :js }.to_not change(answer.files, :count)
+      end
+
+      it 'returnes unauthorized error' do
+        delete :delete_file, params: { id: answer, file_id: answer.files.first }, format: :js
         expect(response).to be_unauthorized
       end
     end

@@ -1,7 +1,11 @@
 $('.question-errors').html('<%= render 'shared/errors', resource: @question %>');
 
 <% if @question.errors.blank? %>
-  $('.question-attributes').html('<h1><%= j @question.title %></h1><p><%= j @question.body %></p> ');
+  $('.question-attributes').html('\
+    <h1><%= j @question.title %></h1>\
+    <p><%= j @question.body %></p>\
+    <%= render 'shared/attached', resource: @question %>');
   $('.edit-question-link').show();
   $('form#edit-question').addClass('hidden');
+  $('.question-actions #question_files').val('');
 <% end %>

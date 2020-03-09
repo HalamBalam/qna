@@ -1,5 +1,7 @@
 div class="answer-#{answer.id}"
   p= answer.body
+  = render 'shared/attached', resource: answer
+
   - if current_user&.author?(answer)
     p
       =link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
@@ -13,6 +15,10 @@ div class="answer-#{answer.id}"
     | This answer is the best!
 
   = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-    = f.label :body, 'Your answer'
-    = f.text_area :body
+    p
+      = f.label :body, 'Your answer'
+      = f.text_area :body
+    p
+      = f.label :files
+      = f.file_field :files, multiple: true
     = f.submit 'Save', method: :update
