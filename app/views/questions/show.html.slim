@@ -18,7 +18,7 @@
           = f.text_area :body
         p
           = f.label :files
-          = f.file_field :files, multiple: true
+          = f.file_field :files, multiple: true, direct_upload: true
         p= f.submit 'Save', method: :update
 
       =link_to 'Edit question', '#', class: 'edit-question-link'

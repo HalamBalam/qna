@@ -25,13 +25,11 @@ feature 'User can delete attached to his answer files', %q{
     visit question_path(question)
 
     within '.answers' do
-      filename = answer.files[0].filename.to_s
-
-      expect(page).to have_link filename
+      expect(page).to have_link 'rails_helper.rb'
 
       click_on 'Delete file', match: :first 
 
-      expect(page).to_not have_link filename 
+      expect(page).to_not have_link 'rails_helper.rb' 
     end
   end
 

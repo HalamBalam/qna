@@ -239,42 +239,4 @@ RSpec.describe QuestionsController, type: :controller do
 
   end
 
-
-  describe 'DELETE #delete_file' do
-    let!(:question) { create(:question, :with_attached_files) }
-
-    context 'user is the author of the question' do
-      before { login(question.user) }
-
-      it 'deletes a file' do
-        expect { delete :delete_file, params: { id: question, file_id: question.files.first }, format: :js }.to change(question.files, :count).by(-1)  
-      end
-
-      it 'renders update view' do
-        delete :delete_file, params: { id: question, file_id: question.files.first }, format: :js  
-        expect(response).to render_template :update
-      end
-    end
-
-    context 'user is not the author of the question' do
-      before { login(user) }
-
-      it 'does not delete a file' do
-        expect { delete :delete_file, params: { id: question, file_id: question.files.first }, format: :js }.to_not change(question.files, :count)
-      end
-    end
-
-    context 'unauthenticated user' do
-      it 'does not delete a file' do
-        expect { delete :delete_file, params: { id: question, file_id: question.files.first }, format: :js }.to_not change(question.files, :count)
-      end
-
-      it 'returnes unauthorized error' do
-        delete :delete_file, params: { id: question, file_id: question.files.first }, format: :js
-        expect(response).to be_unauthorized
-      end
-    end
-
-  end
-
 end

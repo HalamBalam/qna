@@ -1,7 +1,7 @@
 class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :load_question, only: [:show, :update, :destroy, :delete_file]
+  before_action :load_question, only: [:show, :update, :destroy]
 
   def index
     @questions = Question.all
@@ -18,6 +18,7 @@ class QuestionsController < ApplicationController
   def create
     @question = Question.new(question_params)
     @question.user = current_user
+    @question.files = files
 
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
@@ -28,11 +29,8 @@ class QuestionsController < ApplicationController
 
   def update
     if current_user&.author?(@question)
-      @question.title = question_params[:title]
-      @question.body = question_params[:body]
-      @question.save
-      
-      @question.files.attach(question_params[:files]) unless question_params[:files].nil?
+      @question.update(question_params)
+      @question.files.attach(files) if files.present?
     end
   end
 
@@ -45,15 +43,6 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def delete_file
-    if current_user&.author?(@question)
-      @question.files.find(params[:file_id]).purge
-      @question.reload
-    end
-    
-    render 'update'
-  end
-
   private
 
   def load_question
@@ -61,7 +50,11 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body)
+  end
+
+  def files
+    params.require(:question).permit(files: [])[:files]
   end
 
 end
