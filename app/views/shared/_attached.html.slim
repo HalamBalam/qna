@@ -5,7 +5,4 @@
 
       - if current_user&.author?(resource)
         = ' '
-        - if resource.is_a?(Question)
-          = link_to 'Delete file', question_delete_file_path(resource, file.id), remote: true, method: :delete
-        - if resource.is_a?(Answer)
-          = link_to 'Delete file', answer_delete_file_path(resource, file.id), remote: true, method: :delete
+        = link_to 'Delete file', delete_file_path(file.id), remote: true, method: :delete

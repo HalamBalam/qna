@@ -12,7 +12,6 @@ Rails.application.routes.draw do
     end
   end
 
-  delete 'questions/:id/delete_file/:file_id', to: 'attached_files#delete_question_file', as: :question_delete_file
-  delete 'answers/:id/delete_file/:file_id', to: 'attached_files#delete_answer_file', as: :answer_delete_file
+  delete 'delete_file/:id', to: 'attached_files#delete_file', as: :delete_file
 
 end

@@ -18,7 +18,6 @@ class QuestionsController < ApplicationController
   def create
     @question = Question.new(question_params)
     @question.user = current_user
-    @question.files = files
 
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
@@ -30,7 +29,6 @@ class QuestionsController < ApplicationController
   def update
     if current_user&.author?(@question)
       @question.update(question_params)
-      @question.files.attach(files) if files.present?
     end
   end
 
@@ -50,11 +48,7 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body)
-  end
-
-  def files
-    params.require(:question).permit(files: [])[:files]
+    params.require(:question).permit(:title, :body, files: [])
   end
 
 end

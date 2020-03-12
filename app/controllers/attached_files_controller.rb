@@ -2,28 +2,24 @@ class AttachedFilesController < ApplicationController
 
   before_action :authenticate_user!
 
-  def delete_question_file
-    @question = Question.find(params[:id])
+  def delete_file
+    file = ActiveStorage::Attachment.find(params[:id])
 
-    if current_user&.author?(@question)
-      @question.files.find(params[:file_id]).purge
-      @question.reload
+    resource = eval(file.record_type).find(file.record_id)
+
+    if current_user&.author?(resource)
+      file.purge
+      resource.reload
     end
-    
-    render 'questions/update'
-  end
 
-  def delete_answer_file
-    @answer = Answer.find(params[:id])
-
-    if current_user&.author?(@answer)
-      @answer.files.find(params[:file_id]).purge
-
+    if resource.is_a?(Answer)
+      @answer = resource
       @question = @answer.question
-      @question.reload
+    else
+      @question = resource
     end
     
-    render 'answers/update'
+    render "#{file.record_type.downcase}s/update"
   end
 
 end
