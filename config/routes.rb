@@ -12,6 +12,6 @@ Rails.application.routes.draw do
     end
   end
 
-  delete 'delete_file/:id', to: 'attached_files#delete_file', as: :delete_file
+  resources :attachments, only: [:destroy]
 
 end
