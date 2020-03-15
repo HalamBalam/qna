@@ -122,6 +122,18 @@ RSpec.describe AnswersController, type: :controller do
           expect(answer.body).to eq 'new body'
         end
 
+        it 'attaches new files' do
+          expect do
+            files = [
+              Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/rails_helper.rb'))),
+              Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/spec_helper.rb')))
+            ]
+            patch :update, params: { id: answer, answer: { body: answer.body, files: files } }, format: :js
+            answer.reload
+
+          end.to change(answer.files, :count).by(2)
+        end
+
         it 'renders update view' do
           patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js  
           expect(response).to render_template :update

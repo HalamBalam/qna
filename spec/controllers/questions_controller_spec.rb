@@ -126,6 +126,18 @@ RSpec.describe QuestionsController, type: :controller do
             expect(question.body).to eq 'new body'
           end
 
+          it 'attaches new files' do
+            expect do
+              files = [
+                Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/rails_helper.rb'))),
+                Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/spec_helper.rb')))
+              ]
+              patch :update, params: { id: question, question: { title: question.title, body: question.body, files: files } }, format: :js
+              question.reload
+
+            end.to change(question.files, :count).by(2)
+          end
+
           it 'renders update view' do
             patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js  
             expect(response).to render_template :update
@@ -145,6 +157,7 @@ RSpec.describe QuestionsController, type: :controller do
             expect(response).to render_template :update
           end
         end
+
       end
 
       context 'user is not the author of the question' do

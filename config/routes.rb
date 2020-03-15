@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
 
+  root to: 'questions#index'
+
   devise_for :users
+
   resources :questions do
     resources :answers, shallow: true, except: :index do
       member do
@@ -9,6 +12,6 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: 'questions#index'
+  resources :attachments, only: [:destroy]
 
 end
