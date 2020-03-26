@@ -1,0 +1,19 @@
+.links
+  - if resource.links.count > 0
+    p Links:
+    ul
+      - resource.links.each do |link|
+        - if link.gist?
+          li
+            p
+              =link.name
+              script src=link.url.delete_suffix('/')+'.js'
+              - if current_user&.author?(resource)
+                = link_to 'Remove link', link_path(link.id), remote: true, method: :delete
+        - else
+            li
+              p
+                = link_to link.name, link.url
+                - if current_user&.author?(resource)
+                  = ' '
+                  = link_to 'Remove link', link_path(link.id), remote: true, method: :delete
