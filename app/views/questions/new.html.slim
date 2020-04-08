@@ -11,6 +11,16 @@
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true
   
+  .reward
+    p Reward
+    = f.fields_for :reward, @question.reward do |reward|
+      p
+        = reward.label :name
+        = reward.text_field :name
+      p
+        = reward.label :image
+        = reward.file_field :image, direct_upload: true
+
   = render 'shared/new_links', f: f
 
   p= f.submit 'Ask'
