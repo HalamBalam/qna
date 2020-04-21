@@ -1,0 +1,4 @@
+div class="#{vote_class}"
+  = link_to '+1', vote_yes_answer_path(answer), remote: true, method: :patch, data: { answer_id: answer.id }
+  = " | "
+  = link_to '-1', vote_no_answer_path(answer), remote: true, method: :patch, data: { answer_id: answer.id }

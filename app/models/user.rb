@@ -7,9 +7,18 @@ class User < ApplicationRecord
   has_many :questions
   has_many :answers
   has_many :rewards
+  has_many :votes, dependent: :destroy
 
   def author?(item)
      item.user_id == id
+  end
+
+  def voted_for?(votable)
+    vote(votable).present?    
+  end
+
+  def vote(votable)
+    votes.find_by(votable: votable)
   end
 
 end

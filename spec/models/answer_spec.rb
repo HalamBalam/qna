@@ -1,11 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
+
   let!(:user) { create(:user) }
   let!(:question) { create(:question, user: user) }
   let!(:answer1) { create(:answer, question: question) }
   let!(:answer2) { create(:answer, question: question) }
   let!(:reward) { create(:reward, question: question) }
+
+  it_behaves_like 'votable'
 
   it { should belong_to :question }
   it { should have_many(:links).dependent(:destroy) }
@@ -35,4 +38,5 @@ RSpec.describe Answer, type: :model do
   it 'have many attached files' do
     expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
   end
+  
 end
