@@ -4,8 +4,15 @@ $('.question-errors').html('<%= render 'shared/errors', resource: @question %>')
   $('.question-attributes').html('\
     <h1><%= j @question.title %></h1>\
     <p><%= j @question.body %></p>\
-    <%= render 'shared/attached', resource: @question %>');
+    <%= render 'shared/attached', resource: @question %>\
+    <%= render 'shared/links', resource: @question %>');
+
   $('.edit-question-link').show();
   $('form#edit-question').addClass('hidden');
+
   $('.question-actions #question_files').val('');
+
+  $('.question .field input').each(function(index, item) {
+    item.value = '';
+  })
 <% end %>

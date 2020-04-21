@@ -2,4 +2,8 @@ $('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
 
 <% if @answer.errors.blank? %>
   $('.answers').html('<%= j render @question.answers %>');
+
+  $('.answers .field input').each(function(index, item) {
+    item.value = '';
+  })
 <% end %>

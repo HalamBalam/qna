@@ -11,7 +11,7 @@ feature 'User can delete attached to his answer files', %q{
   given!(:answer) { create(:answer, :with_attached_files, question: question) }
 
 
-  scenario 'Unauthenticated user can not delete files' do
+  scenario 'Unauthenticated user can not delete files', js: true do
     visit question_path(question)
 
     within '.answers' do

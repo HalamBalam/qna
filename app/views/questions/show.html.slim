@@ -6,6 +6,15 @@
     p= @question.body
 
     = render 'shared/attached', resource: @question
+    
+    - if @question.reward.present?
+      p Reward
+      p
+        = @question.reward.name
+      p
+        = link_to @question.reward.image.filename.to_s, url_for(@question.reward.image)
+
+    = render 'shared/links', resource: @question
 
   .question-actions
     - if current_user&.author?(@question)
@@ -19,6 +28,9 @@
         p
           = f.label :files
           = f.file_field :files, multiple: true, direct_upload: true
+
+        = render 'shared/new_links', f: f
+        
         p= f.submit 'Save', method: :update
 
       =link_to 'Edit question', '#', class: 'edit-question-link'

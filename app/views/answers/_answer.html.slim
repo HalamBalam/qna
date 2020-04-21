@@ -1,6 +1,7 @@
 div class="answer-#{answer.id}"
   p= answer.body
   = render 'shared/attached', resource: answer
+  = render 'shared/links', resource: answer
 
   - if current_user&.author?(answer)
     p
@@ -21,4 +22,7 @@ div class="answer-#{answer.id}"
     p
       = f.label :files
       = f.file_field :files, multiple: true, direct_upload: true
+
+    = render 'shared/new_links', f: f
+    
     = f.submit 'Save', method: :update
