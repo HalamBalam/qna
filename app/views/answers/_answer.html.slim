@@ -2,6 +2,9 @@ div class="answer-#{answer.id}"
   p= answer.body
   = render 'shared/attached', resource: answer
   = render 'shared/links', resource: answer
+  
+  .answer-rating
+    p = "Rating: #{answer.rating}"
 
   - if current_user&.author?(answer)
     p
@@ -26,3 +29,11 @@ div class="answer-#{answer.id}"
     = render 'shared/new_links', f: f
     
     = f.submit 'Save', method: :update
+
+  - if user_signed_in? && !current_user&.author?(answer)
+    .answer-vote-actions
+      - if current_user.voted_for?(answer)
+        = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote hidden"
+        = link_to 're-vote', vote_path(current_user.vote(answer)), class: 'answer-re-vote', remote: true, method: :delete, data: { answer_id: answer.id }
+      - else 
+        = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote"
