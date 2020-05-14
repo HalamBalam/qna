@@ -5,10 +5,13 @@ class AnswersController < ApplicationController
   before_action :load_answer, only: [:show, :update, :destroy, :mark_as_best]
   before_action :load_question, only: [:new, :create]
 
+  after_action :publish_answer, only: [:create]
+
   def index
   end
 
   def show
+    render partial: 'answers/answer', locals: { answer: @answer }
   end
 
   def new
@@ -62,6 +65,14 @@ class AnswersController < ApplicationController
 
   def load_question
     @question = Question.find(params[:question_id])
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+    
+    ActionCable.server.broadcast(
+      "question_#{@answer.question.id}",
+      ApplicationController.render(json: { id: @answer.id, path: answer_path(@answer), question_id: @answer.question.id } ))
   end
 
   def answer_params

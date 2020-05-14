@@ -6,6 +6,7 @@ feature 'User can create an answer', %q{
 
   given(:user) { create(:user) }
   given(:question) { create(:question) }
+  given(:question2) { create(:question) }
 
   describe 'Authenticated user', js: true do
     background do
@@ -29,6 +30,53 @@ feature 'User can create an answer', %q{
     scenario 'could not create invalid answer' do
       click_on 'Answer'
       expect(page).to have_content "Body can't be blank"
+    end
+  end
+
+  describe 'multiple sessions' do
+    scenario "answer appears on another user's page with the answer's question", js: true do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'Body', with: 'New answer'
+        click_on 'Answer'
+
+        expect(page).to have_content 'New answer'
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'New answer'
+      end
+    end
+
+
+    scenario "answer does not appear on another user's page with the different question", js: true do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question2)
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'Body', with: 'New answer'
+        click_on 'Answer'
+
+        expect(page).to have_content 'New answer'
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to_not have_content 'New answer'
+      end
     end
   end
 

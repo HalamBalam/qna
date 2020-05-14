@@ -14,8 +14,8 @@ RSpec.describe AnswersController, type: :controller do
       expect(assigns(:answer)).to eq answer
     end
 
-    it 'renders show view' do
-      expect(response).to render_template :show  
+    it 'renders answer partial' do
+      expect(response).to render_template 'answers/_answer'
     end
   end
 

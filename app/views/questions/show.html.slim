@@ -1,6 +1,9 @@
+= include_gon
+
 .question
   .question-errors
     = render 'shared/errors', resource: @question
+  
   .question-attributes
     h1= @question.title
     p= @question.body

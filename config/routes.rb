@@ -16,6 +16,14 @@ Rails.application.routes.draw do
       member do
         patch :mark_as_best
       end
+
+      resources :comments, only: [:create], defaults: { context: 'answer' }
+    end
+
+    resources :comments, only: [:create], defaults: { context: 'question' }
+
+    member do
+      get :partial
     end
   end
 
@@ -23,5 +31,7 @@ Rails.application.routes.draw do
   resources :links,       only: [:destroy]
   resources :rewards,     only: [:index]
   resources :votes,       only: [:destroy]
+
+  mount ActionCable.server => '/cable'
 
 end
