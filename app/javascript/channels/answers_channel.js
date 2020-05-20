@@ -1,29 +1,34 @@
 import consumer from "./consumer"
 
 $(document).on('turbolinks:load', function() {
-  if ($('.answers').length != 0) {
-    consumer.subscriptions.create({ channel: "AnswersChannel", question_id: gon.question_id }, {
-      connected() {
-        // Called when the subscription is ready for use on the server
-      },
-
-      disconnected() {
-        // Called when the subscription has been terminated by the server
-      },
-
-      received(data) {
-        // Called when there's incoming data on the websocket for this channel
-        let answer = JSON.parse(data);
-
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', answer.path, false);
-        xhr.send();
-
-        if (xhr.status == 200) {
-          $('.answers').append(xhr.responseText);
-        }
-
-      }
-    });
+  if ($('.answers').length == 0) {
+    return;
   }
+   
+  consumer.subscriptions.create({ channel: "AnswersChannel" }, {
+    connected() {
+      // Called when the subscription is ready for use on the server
+      this.perform('follow', { question_id: gon.question_id });
+    },
+
+    received(data) {
+      let answer = JSON.parse(data);
+
+      if (gon.current_user == answer.user) {
+        return;
+      }
+
+      $('.answers').append(answer.html);
+      
+      if (!gon.current_user || gon.current_user != answer.author_of_question) {
+        $('.answers .answer-' + answer.id + ' .mark-as-best-link').remove();
+      }
+
+      if (!gon.current_user) {
+        $('.answers .answer-' + answer.id + ' .answer-vote-actions').remove();
+        $('.answers .answer-' + answer.id + ' .new-answer-comment').remove();
+      }
+    }
+  });
+  
 })

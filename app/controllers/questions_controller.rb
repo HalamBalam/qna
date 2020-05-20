@@ -14,11 +14,8 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @answer.links.new
 
+    gon.current_user = current_user.id if user_signed_in?
     gon.question_id = @question.id
-  end
-
-  def partial
-    render partial: 'questions/question', locals: { question: @question }
   end
 
   def new
@@ -64,7 +61,7 @@ class QuestionsController < ApplicationController
     
     ActionCable.server.broadcast(
       'questions',
-      ApplicationController.render(json: { id: @question.id, path: partial_question_path(@question) } ))
+      ApplicationController.render(partial: 'questions/question', locals: { question: @question }))
   end
 
   def question_params

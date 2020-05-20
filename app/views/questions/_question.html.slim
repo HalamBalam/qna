@@ -1,17 +1,2 @@
 div class="question-#{question.id}"
   p= link_to question.title, question
-
-  = render 'shared/comments', resource: question
-
-  - if user_signed_in?
-    .question-errors
-      = render 'shared/errors', resource: question
-
-    = form_with model: [question, question.comments.new], class: 'hidden', html: { id: "new-question-comment-#{question.id}" } do |f|
-      p = f.label :body, 'Comment'
-      p = f.text_area :body
-      
-      p = f.submit
-
-    =link_to 'Add comment', '#', class: 'comment-question-link', data: { question_id: question.id }
-    br = ""

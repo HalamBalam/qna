@@ -14,18 +14,18 @@ RSpec.describe CommentsController, type: :controller do
 
         it 'saves a new comment in the database' do
           expect { post :create,
-                   params: { question_id: question, comment: attributes_for(:comment, commentable: question), context: 'question' },
+                   params: { question_id: question, comment: attributes_for(:comment, commentable: question) },
                    format: :js
                  }.to change(Comment, :count).by(1)
         end
 
         it 'has a valid question' do
-          post :create, params: { question_id: question, comment: attributes_for(:comment, commentable: question), context: 'question' }, format: :js
+          post :create, params: { question_id: question, comment: attributes_for(:comment, commentable: question) }, format: :js
           expect(assigns(:comment).commentable).to eq question  
         end
 
         it 'has a valid user' do
-          post :create, params: { question_id: question, comment: attributes_for(:comment, commentable: question), context: 'question' }, format: :js
+          post :create, params: { question_id: question, comment: attributes_for(:comment, commentable: question) }, format: :js
           expect(assigns(:comment).user).to eq user 
         end
 
@@ -35,7 +35,7 @@ RSpec.describe CommentsController, type: :controller do
 
         it 'does not save the comment' do
           expect { post :create,
-                   params: { question_id: question, comment: attributes_for(:comment, :invalid, commentable: question), context: 'question' },
+                   params: { question_id: question, comment: attributes_for(:comment, :invalid, commentable: question) },
                    format: :js
                  }.to_not change(Comment, :count)  
         end
@@ -46,13 +46,13 @@ RSpec.describe CommentsController, type: :controller do
    context 'unauthenticated user' do
       it 'does not save the comment' do
         expect { post :create, 
-                 params: { question_id: question, comment: attributes_for(:comment, commentable: question), context: 'question' },
+                 params: { question_id: question, comment: attributes_for(:comment, commentable: question) },
                  format: :js
                }.to_not change(Comment, :count)  
       end
 
       it 'redirects to sign in page' do
-        post :create, params: { question_id: question, comment: attributes_for(:comment, commentable: question), context: 'question' }, format: :js
+        post :create, params: { question_id: question, comment: attributes_for(:comment, commentable: question) }, format: :js
         expect(response).to be_unauthorized
       end
     end
@@ -69,18 +69,18 @@ RSpec.describe CommentsController, type: :controller do
 
         it 'saves a new comment in the database' do
           expect { post :create,
-                   params: { answer_id: answer, comment: attributes_for(:comment, commentable: answer), context: 'answer' },
+                   params: { answer_id: answer, comment: attributes_for(:comment, commentable: answer) },
                    format: :js
                  }.to change(Comment, :count).by(1)
         end
 
         it 'has a valid answer' do
-          post :create, params: { answer_id: answer, comment: attributes_for(:comment, commentable: answer), context: 'answer' }, format: :js
+          post :create, params: { answer_id: answer, comment: attributes_for(:comment, commentable: answer) }, format: :js
           expect(assigns(:comment).commentable).to eq answer  
         end
 
         it 'has a valid user' do
-          post :create, params: { answer_id: answer, comment: attributes_for(:comment, commentable: answer), context: 'answer' }, format: :js
+          post :create, params: { answer_id: answer, comment: attributes_for(:comment, commentable: answer) }, format: :js
           expect(assigns(:comment).user).to eq user 
         end
 
@@ -90,7 +90,7 @@ RSpec.describe CommentsController, type: :controller do
 
         it 'does not save the comment' do
           expect { post :create,
-                   params: { answer_id: answer, comment: attributes_for(:comment, :invalid, commentable: answer), context: 'answer' },
+                   params: { answer_id: answer, comment: attributes_for(:comment, :invalid, commentable: answer) },
                    format: :js
                  }.to_not change(Comment, :count)  
         end
@@ -101,13 +101,13 @@ RSpec.describe CommentsController, type: :controller do
    context 'unauthenticated user' do
       it 'does not save the comment' do
         expect { post :create, 
-                 params: { answer_id: answer, comment: attributes_for(:comment, commentable: answer), context: 'answer' },
+                 params: { answer_id: answer, comment: attributes_for(:comment, commentable: answer) },
                  format: :js
                }.to_not change(Comment, :count)  
       end
 
       it 'redirects to sign in page' do
-        post :create, params: { answer_id: answer, comment: attributes_for(:comment, commentable: answer), context: 'answer' }, format: :js
+        post :create, params: { answer_id: answer, comment: attributes_for(:comment, commentable: answer) }, format: :js
         expect(response).to be_unauthorized
       end
     end

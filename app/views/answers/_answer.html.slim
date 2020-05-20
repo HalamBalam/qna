@@ -46,7 +46,7 @@ div class="answer-#{answer.id}"
     .answer-errors
       = render 'shared/errors', resource: answer
 
-    = form_with model: [answer, answer.comments.new], class: 'hidden', html: { id: "new-answer-comment-#{answer.id}" } do |f|
+    = form_with model: [answer, Comment.new], class: 'hidden', html: { id: "new-answer-comment-#{answer.id}" } do |f|
       p = f.label :body, 'Comment'
       p = f.text_area :body
       

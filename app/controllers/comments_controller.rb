@@ -12,16 +12,9 @@ class CommentsController < ApplicationController
 
   private
 
-  def model_klass
-    params[:context].classify.constantize
-  end
-
-  def attr_id
-    "#{params[:context]}_id".to_sym
-  end
-
   def set_commentable
-    @commentable = model_klass.find(params[attr_id])
+    klass = [Answer, Question].detect { |c| params["#{c.name.underscore}_id"] }
+    @commentable = klass.find(params["#{klass.name.underscore}_id"])
   end
 
   def comment_params
@@ -31,10 +24,12 @@ class CommentsController < ApplicationController
   def publish_comment
     return if @comment.errors.any?
     
+    question_id = @commentable.is_a?(Answer) ? @commentable.question.id : @commentable.id
+
     ActionCable.server.broadcast(
-      "comments",
-      ApplicationController.render(json: { id: @comment.id,
-                                           user: @comment.user.email,
+      "comments_for_question_#{question_id}",
+      ApplicationController.render(json: { email: @comment.user.email,
+                                           user: @comment.user.id,
                                            body: @comment.body,
                                            context: @commentable.class.to_s.downcase,
                                            commentable_id: @commentable.id } ))

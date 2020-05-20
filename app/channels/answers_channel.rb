@@ -1,9 +1,7 @@
 class AnswersChannel < ApplicationCable::Channel
-  def subscribed
-    stream_from "question_#{params[:question_id]}" if !params[:question_id].nil?
+  
+  def follow(data)
+    stream_from "answers_for_question_#{data['question_id']}" if data['question_id'].present?
   end
-
-  def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
-  end
+  
 end

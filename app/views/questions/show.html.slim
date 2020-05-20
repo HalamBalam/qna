@@ -38,9 +38,10 @@
         
         p= f.submit 'Save', method: :update
 
-      =link_to 'Edit question', '#', class: 'edit-question-link'
-      = " | "
-      =link_to 'Delete question', question_path(@question), method: :delete
+      p
+        =link_to 'Edit question', '#', class: 'edit-question-link'
+        = " | "
+        =link_to 'Delete question', question_path(@question), method: :delete
     
     - elsif user_signed_in?
       
@@ -51,6 +52,18 @@
         - else
           = render 'vote_actions', vote_class: 'question-vote'
                 
+  
+  = render 'shared/comments', resource: @question
+
+  - if user_signed_in?
+    = form_with model: [@question, @question.comments.new], class: 'hidden', html: { id: "new-question-comment" } do |f|
+      p = f.label :body, 'Comment'
+      p = f.text_area :body
+      
+      p = f.submit
+
+    =link_to 'Add comment', '#', class: 'comment-question-link'
+    br = ""
 
 .answers
   h2 Answers

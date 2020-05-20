@@ -11,19 +11,15 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :questions, concerns: [:votable] do
-    resources :answers, shallow: true, except: :index, concerns: [:votable] do
+  concern :commentable do
+    resources :comments, only: [:create]
+  end
+
+  resources :questions, concerns: [:votable, :commentable] do
+    resources :answers, shallow: true, except: :index, concerns: [:votable, :commentable] do
       member do
         patch :mark_as_best
       end
-
-      resources :comments, only: [:create], defaults: { context: 'answer' }
-    end
-
-    resources :comments, only: [:create], defaults: { context: 'question' }
-
-    member do
-      get :partial
     end
   end
 

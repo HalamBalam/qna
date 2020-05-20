@@ -59,17 +59,17 @@ RSpec.describe AnswersController, type: :controller do
         it 'saves a new answer in the database' do
           expect { post :create,
                    params: { question_id: question, answer: attributes_for(:answer), user_id: user },
-                   format: :json
+                   format: :js
                  }.to change(Answer, :count).by(1)
         end
 
         it 'has a valid question' do
-          post :create, params: { question_id: question, answer: attributes_for(:answer), user_id: user }, format: :json
+          post :create, params: { question_id: question, answer: attributes_for(:answer), user_id: user }, format: :js
           expect(assigns(:answer).question).to eq question  
         end
 
         it 'has a valid user' do
-          post :create, params: { question_id: question, answer: attributes_for(:answer), user_id: user }, format: :json
+          post :create, params: { question_id: question, answer: attributes_for(:answer), user_id: user }, format: :js
           expect(assigns(:answer).user).to eq user 
         end
 
@@ -80,7 +80,7 @@ RSpec.describe AnswersController, type: :controller do
         it 'does not save the answer' do
           expect { post :create,
                    params: { question_id: question, answer: attributes_for(:answer, :invalid), user_id: user },
-                   format: :json
+                   format: :js
                  }.to_not change(Answer, :count)  
         end
 
