@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 require 'models/concerns/votable_spec.rb'
+require 'models/concerns/commentable_spec.rb'
+
 require 'controllers/concerns/voted_spec.rb'
 
 ENV['RAILS_ENV'] ||= 'test'

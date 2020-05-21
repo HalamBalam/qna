@@ -1,0 +1,48 @@
+= "-------------------------------------------"
+div class="answer-#{answer.id}"
+  p= answer.body
+  - if answer.files.attached?
+    - answer.files.each do |file|
+      p
+        = link_to file.filename.to_s, url_for(file)
+
+  .links
+    - if answer.links.count > 0
+      p Links:
+      ul
+        - answer.links.each do |link|
+          - if link.gist?
+            li
+              p
+                =link.name
+                script src=link.url.delete_suffix('/')+'.js'
+          - else
+              li
+                p
+                  = link_to link.name, link.url
+
+  .answer-rating
+    p = "Rating: #{answer.rating}"
+
+  .mark-as-best-link
+    =link_to 'Mark as best', mark_as_best_answer_path(answer), remote: true, method: :patch
+
+  - if answer.best?
+    | This answer is the best!
+
+  .answer-vote-actions
+    = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote"
+
+  = render 'shared/comments', resource: answer
+
+  .answer-errors
+    = render 'shared/errors', resource: answer
+
+  .new-answer-comment
+    = form_with model: [answer, Comment.new], class: 'hidden', html: { id: "new-answer-comment-#{answer.id}" } do |f|
+      p = f.label :body, 'Comment'
+      p = f.text_area :body
+      
+      p = f.submit
+
+    =link_to 'Add comment', '#', class: 'comment-answer-link', data: { answer_id: answer.id }

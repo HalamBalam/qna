@@ -1,0 +1,22 @@
+<% if @commentable.is_a?(Question) %>
+  $(' .question-errors').html('<%= render 'shared/errors', resource: @comment %>');
+  
+  <% if @comment.persisted? %>
+    $('.question .comments').append('<p><%= "\##{@comment.user.email}: #{@comment.body}" %></p>');
+    $('.question #comment_body').val('');
+    $('form#new-question-comment').addClass('hidden');
+    $('.question .comment-question-link').show();
+  <% end %>
+
+
+<% elsif @commentable.is_a?(Answer) %>
+  $('.answer-' + '<%= @commentable.id %>' + ' .answer-errors').html('<%= render 'shared/errors', resource: @comment %>');
+  
+  <% if @comment.persisted? %>
+    $('.answer-' + '<%= @commentable.id %> .comments').append('<p><%= "\##{@comment.user.email}: #{@comment.body}" %></p>');
+    $('.answer-' + '<%= @commentable.id %>' + ' #comment_body').val('');
+    $('form#new-answer-comment-' + '<%= @commentable.id %>').addClass('hidden');
+    $('.answer-' + '<%= @commentable.id %>' + ' .comment-answer-link').show();
+  <% end %>
+
+<% end %> 
