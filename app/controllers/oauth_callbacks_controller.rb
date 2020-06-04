@@ -12,7 +12,6 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
   def user_auth(description)
     auth = request.env['omniauth.auth']
     
-    @user = nil
     if auth[:info][:email].nil?
       @authorization = Authorization.find_by(provider: auth[:provider], uid: auth[:uid])
 
