@@ -10,6 +10,8 @@ feature 'User can edit his answer', %q{
   given!(:question) { create(:question) }
   given!(:answer) { create(:answer, question: question) }
 
+  Capybara.javascript_driver = :selenium_headless
+
   scenario 'Unauthenticated user can not edit answer' do
     visit question_path(question)
     expect(page).to_not have_link 'Edit'

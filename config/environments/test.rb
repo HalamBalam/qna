@@ -40,7 +40,8 @@ Rails.application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
-
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
@@ -48,4 +49,33 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   config.action_cable.disable_request_forgery_protection = true
+
+  OmniAuth.config.test_mode = true
+  OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new({
+      'provider' => 'github',
+      'uid' => '12345',
+      'info' => {
+        'name' => 'mockuser',
+        'email' => 'mockuser@github.com',
+        'image' => 'mockuser_avatar_url'
+      },
+      'credentials' => {
+        'token' => 'mock_token',
+        'secret' => 'mock_secret'
+      }
+    })
+
+  OmniAuth.config.mock_auth[:vkontakte] = OmniAuth::AuthHash.new({
+      'provider' => 'vkontakte',
+      'uid' => '12345',
+      'info' => {
+        'name' => 'mockuser',
+        'email' => 'mockuser@vk.com',
+        'image' => 'mockuser_avatar_url'
+      },
+      'credentials' => {
+        'token' => 'mock_token',
+        'secret' => 'mock_secret'
+      }
+    })
 end
