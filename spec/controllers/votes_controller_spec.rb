@@ -29,9 +29,10 @@ RSpec.describe VotesController, type: :controller do
         expect { delete :destroy, params: { id: vote }, format: :json }.to_not change(Vote, :count)
       end
 
-      it 'returns unprocessable_entity' do
+      it 'redirects to root path' do
         delete :destroy, params: { id: vote }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -72,9 +73,10 @@ RSpec.describe VotesController, type: :controller do
         expect { delete :destroy, params: { id: vote }, format: :json }.to_not change(Vote, :count)
       end
 
-      it 'returns unprocessable_entity' do
+      it 'redirects to root path' do
         delete :destroy, params: { id: vote }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to root_path
       end
     end
 

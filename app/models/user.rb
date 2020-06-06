@@ -20,10 +20,6 @@ class User < ApplicationRecord
     authorizations.create(provider: auth[:provider], uid: auth[:uid], confirmed: confirmed)
   end
 
-  def author?(item)
-     item.user_id == id
-  end
-
   def voted_for?(votable)
     vote(votable).present?
   end

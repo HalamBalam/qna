@@ -22,7 +22,7 @@
       p = "Rating: #{@question.rating}"
 
   .question-actions
-    - if current_user&.author?(@question)
+    - if can?(:edit, @question)
       = form_with model: @question, class: 'hidden', html: { id: 'edit-question' } do |f|
         p
           = f.label :title, 'New title'
@@ -43,19 +43,19 @@
         = " | "
         =link_to 'Delete question', question_path(@question), method: :delete
     
-    - elsif user_signed_in?
       
-      .question-vote-actions
-        - if current_user.voted_for?(@question)
-          = render 'vote_actions', vote_class: 'question-vote hidden'
-          = link_to 're-vote', vote_path(current_user.vote(@question)), class: 'question-re-vote', remote: true, method: :delete
-        - else
-          = render 'vote_actions', vote_class: 'question-vote'
+    .question-vote-actions
+      - if can?(:revote, @question)
+        = render 'vote_actions', vote_class: 'question-vote hidden'
+        = link_to 're-vote', vote_path(current_user.vote(@question)), class: 'question-re-vote', remote: true, method: :delete
+      
+      - if can?(:vote, @question)
+        = render 'vote_actions', vote_class: 'question-vote'
                 
   
   = render 'shared/comments', resource: @question
 
-  - if user_signed_in?
+  - if can?(:create, Comment)
     = form_with model: [@question, @question.comments.new], class: 'hidden', html: { id: "new-question-comment" } do |f|
       p = f.label :body, 'Comment'
       p = f.text_area :body
@@ -69,11 +69,11 @@
   h2 Answers
   = render @question.answers, question: @question
 
-  - if user_signed_in?
+  - if can?(:create, Answer)
     .answer-errors
       = render 'shared/errors', resource: @answer
 
-- if user_signed_in?
+- if can?(:create, Answer)
   = render 'answers/form', question: @question, answer: @answer
 
 = link_to 'Back', questions_path

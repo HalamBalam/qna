@@ -35,9 +35,10 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_yes, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'returns unprocessable_entity' do
+      it 'redirects to root path' do
         patch :vote_yes, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -53,9 +54,10 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_yes, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'returns unprocessable_entity' do
+      it 'redirects to root path' do
         patch :vote_yes, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)  
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -107,9 +109,10 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_no, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'returns unprocessable_entity' do
+      it 'redirects to root path' do
         patch :vote_no, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -125,9 +128,10 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_no, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'returns unprocessable_entity' do
+      it 'redirects to root path' do
         patch :vote_no, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)  
+        expect(response).to have_http_status(:found)
+        expect(response).to redirect_to root_path
       end
     end
 

@@ -159,9 +159,9 @@ RSpec.describe AnswersController, type: :controller do
           end.to_not change(answer, :body)  
         end
 
-        it 'redirects to answer' do
+        it 'redirects to root_path' do
           patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-          expect(response).to redirect_to assigns(:answer)
+          expect(response).to redirect_to root_path
         end
       end
     end
@@ -208,9 +208,9 @@ RSpec.describe AnswersController, type: :controller do
           expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)
         end
 
-        it 'renders destroy view' do
+        it 'redirects to root path' do
           delete :destroy, params: { id: answer }, format: :js
-          expect(response).to render_template :destroy
+          expect(response).to redirect_to root_path
         end
       end
 
@@ -259,9 +259,9 @@ RSpec.describe AnswersController, type: :controller do
           expect(answer).not_to be_best
         end
 
-        it 'renders update view' do
+        it 'redirects to root path' do
           patch :mark_as_best, params: { id: answer }, format: :js
-          expect(response).to render_template :update
+          expect(response).to redirect_to root_path
         end
       end
 
