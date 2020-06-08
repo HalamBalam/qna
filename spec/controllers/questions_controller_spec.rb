@@ -184,9 +184,9 @@ RSpec.describe QuestionsController, type: :controller do
           end.to_not change(question, :body)
         end
 
-        it 'redirects to root path' do
+        it 'returns 403 status' do
           patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-          expect(response).to redirect_to root_path
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end

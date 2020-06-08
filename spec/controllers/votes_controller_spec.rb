@@ -29,10 +29,9 @@ RSpec.describe VotesController, type: :controller do
         expect { delete :destroy, params: { id: vote }, format: :json }.to_not change(Vote, :count)
       end
 
-      it 'redirects to root path' do
+      it 'returns 403 status' do
         delete :destroy, params: { id: vote }, format: :json
-        expect(response).to have_http_status(:found)
-        expect(response).to redirect_to root_path
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -73,10 +72,9 @@ RSpec.describe VotesController, type: :controller do
         expect { delete :destroy, params: { id: vote }, format: :json }.to_not change(Vote, :count)
       end
 
-      it 'redirects to root path' do
+      it 'returns 403 status' do
         delete :destroy, params: { id: vote }, format: :json
-        expect(response).to have_http_status(:found)
-        expect(response).to redirect_to root_path
+        expect(response).to have_http_status(:forbidden)
       end
     end
 

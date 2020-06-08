@@ -15,6 +15,11 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
 
+  it { expect(answer.user).to be_author(answer) }
+  it { expect(user).not_to be_author(answer) }
+  it { expect(question.user).to be_author(question) }
+  it { expect(user).not_to be_author(question) }
+
   describe '.find_for_oauth' do
     let!(:user) { create(:user) }
     let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }

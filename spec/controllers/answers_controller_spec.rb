@@ -159,9 +159,9 @@ RSpec.describe AnswersController, type: :controller do
           end.to_not change(answer, :body)  
         end
 
-        it 'redirects to root_path' do
+        it 'returns 403 status' do
           patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-          expect(response).to redirect_to root_path
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end
@@ -208,9 +208,9 @@ RSpec.describe AnswersController, type: :controller do
           expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)
         end
 
-        it 'redirects to root path' do
+        it 'returns 403 status' do
           delete :destroy, params: { id: answer }, format: :js
-          expect(response).to redirect_to root_path
+          expect(response).to have_http_status(:forbidden)
         end
       end
 
@@ -259,9 +259,9 @@ RSpec.describe AnswersController, type: :controller do
           expect(answer).not_to be_best
         end
 
-        it 'redirects to root path' do
+        it 'returns 403 status' do
           patch :mark_as_best, params: { id: answer }, format: :js
-          expect(response).to redirect_to root_path
+          expect(response).to have_http_status(:forbidden)
         end
       end
 

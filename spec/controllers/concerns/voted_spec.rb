@@ -35,10 +35,9 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_yes, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'redirects to root path' do
+      it 'returns 403 status' do
         patch :vote_yes, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:found)
-        expect(response).to redirect_to root_path
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -54,10 +53,9 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_yes, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'redirects to root path' do
+      it 'returns 403 status' do
         patch :vote_yes, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:found)
-        expect(response).to redirect_to root_path
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -109,10 +107,9 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_no, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'redirects to root path' do
+      it 'returns 403 status' do
         patch :vote_no, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:found)
-        expect(response).to redirect_to root_path
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -128,10 +125,9 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_no, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'redirects to root path' do
+      it 'returns 403 status' do
         patch :vote_no, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:found)
-        expect(response).to redirect_to root_path
+        expect(response).to have_http_status(:forbidden)
       end
     end
 

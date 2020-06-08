@@ -14,7 +14,7 @@ RSpec.describe LinksController, type: :controller do
       before { login(answer.user) }
 
       it 'deletes a link' do
-        expect { delete :destroy, params: { id: answer_link }, format: :js }.to change(answer.links, :count).by(-1)  
+        expect { delete :destroy, params: { id: answer_link }, format: :js }.to change(answer.links, :count).by(-1)
       end
 
       it 'renders update view' do
@@ -30,9 +30,9 @@ RSpec.describe LinksController, type: :controller do
         expect { delete :destroy, params: { id: answer_link }, format: :js }.to_not change(answer.links, :count)
       end
 
-      it 'redirects to root path' do
-        delete :destroy, params: { id: answer_link }, format: :js  
-        expect(response).to redirect_to root_path
+      it 'returns 403 status' do
+        delete :destroy, params: { id: answer_link }, format: :js
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe LinksController, type: :controller do
       before { login(question.user) }
 
       it 'deletes a link' do
-        expect { delete :destroy, params: { id: question_link }, format: :js }.to change(question.links, :count).by(-1)  
+        expect { delete :destroy, params: { id: question_link }, format: :js }.to change(question.links, :count).by(-1)
       end
 
       it 'renders update view' do
@@ -72,9 +72,9 @@ RSpec.describe LinksController, type: :controller do
         expect { delete :destroy, params: { id: question_link }, format: :js }.to_not change(question.links, :count)
       end
 
-      it 'redirects to root path' do
-        delete :destroy, params: { id: question_link }, format: :js  
-        expect(response).to redirect_to root_path
+      it 'returns 403 status' do
+        delete :destroy, params: { id: question_link }, format: :js
+        expect(response).to have_http_status(:forbidden)
       end
     end
 

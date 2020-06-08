@@ -13,7 +13,7 @@ RSpec.describe AttachmentsController, type: :controller do
       before { login(answer.user) }
 
       it 'deletes a file' do
-        expect { delete :destroy, params: { id: answer.files.first }, format: :js }.to change(answer.files, :count).by(-1)  
+        expect { delete :destroy, params: { id: answer.files.first }, format: :js }.to change(answer.files, :count).by(-1)
       end
 
       it 'renders update view' do
@@ -29,9 +29,9 @@ RSpec.describe AttachmentsController, type: :controller do
         expect { delete :destroy, params: { id: answer.files.first }, format: :js }.to_not change(answer.files, :count)
       end
 
-      it 'redirects to root path' do
-        delete :destroy, params: { id: answer.files.first }, format: :js  
-        expect(response).to redirect_to root_path
+      it 'returns 403 status' do
+        delete :destroy, params: { id: answer.files.first }, format: :js
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -55,7 +55,7 @@ RSpec.describe AttachmentsController, type: :controller do
       before { login(question.user) }
 
       it 'deletes a file' do
-        expect { delete :destroy, params: { id: question.files.first }, format: :js }.to change(question.files, :count).by(-1)  
+        expect { delete :destroy, params: { id: question.files.first }, format: :js }.to change(question.files, :count).by(-1)
       end
 
       it 'renders update view' do
@@ -71,9 +71,9 @@ RSpec.describe AttachmentsController, type: :controller do
         expect { delete :destroy, params: { id: question.files.first }, format: :js }.to_not change(question.files, :count)
       end
 
-      it 'renders update view' do
-        delete :destroy, params: { id: question.files.first }, format: :js  
-        expect(response).to redirect_to root_path
+      it 'returns 403 status' do
+        delete :destroy, params: { id: question.files.first }, format: :js
+        expect(response).to have_http_status(:forbidden)
       end
     end
 

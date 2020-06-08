@@ -11,23 +11,23 @@ class Ability
       can [:update, :destroy], [Question, Answer], user_id: user.id
       
       can :vote, [Question, Answer] do |votable|
-        votable.user.id != user.id && !user.voted_for?(votable)
+        !user.author?(votable) && !user.voted_for?(votable)
       end
 
       can :revote, [Question, Answer] do |votable|
-        votable.user.id != user.id && user.voted_for?(votable)
+        !user.author?(votable) && user.voted_for?(votable)
       end
 
       can :destroy, ActiveStorage::Attachment do |file|
-        file.record.user.id == user.id
+        user.author?(file.record)
       end
 
       can :destroy, Link do |link|
-        link.linkable.user.id == user.id
+        user.author?(link.linkable)
       end
 
       can :mark_answer_as_best, Answer do |answer|
-        answer.question.user.id == user.id && !answer.best?
+        user.author?(answer.question) && !answer.best?
       end
     end
   end
