@@ -35,9 +35,9 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_yes, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'returns unprocessable_entity' do
+      it 'returns 403 status' do
         patch :vote_yes, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -53,9 +53,9 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_yes, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'returns unprocessable_entity' do
+      it 'returns 403 status' do
         patch :vote_yes, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)  
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -107,9 +107,9 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_no, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'returns unprocessable_entity' do
+      it 'returns 403 status' do
         patch :vote_no, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -125,9 +125,9 @@ RSpec.shared_examples_for 'voted' do
         expect { patch :vote_no, params: { id: votable }, format: :json }.to_not change(votable, :rating)
       end
 
-      it 'returns unprocessable_entity' do
+      it 'returns 403 status' do
         patch :vote_no, params: { id: votable }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)  
+        expect(response).to have_http_status(:forbidden)
       end
     end
 

@@ -3,6 +3,9 @@ module Voted
 
   included do
     before_action :set_votable, only: [:vote_yes, :vote_no]
+    
+    skip_authorize_resource :only => [:vote_yes, :vote_no]
+    skip_authorization_check :only => [:vote_yes, :vote_no]
   end
 
   def vote_yes
@@ -16,8 +19,7 @@ module Voted
   private
 
   def vote(rating)
-    return author_error_response if current_user&.author?(@votable)
-    return existed_error_response if current_user&.voted_for?(@votable)
+    authorize! :vote, @votable
 
     vote = @votable.votes.new
     vote.user = current_user
@@ -31,18 +33,6 @@ module Voted
           render json: vote.errors.full_messages, status: :unprocessable_entity
         end
       end
-    end
-  end
-
-  def author_error_response
-    respond_to do |format|
-      format.json { render json: ['You could not vote for your answers and questions'], status: :unprocessable_entity }  
-    end
-  end
-
-  def existed_error_response
-    respond_to do |format|
-      format.json { render json: ['You can only vote once for your answers and questions'], status: :unprocessable_entity }  
     end
   end
 

@@ -184,9 +184,9 @@ RSpec.describe QuestionsController, type: :controller do
           end.to_not change(question, :body)
         end
 
-        it 'redirects to question' do
+        it 'returns 403 status' do
           patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-          expect(response).to redirect_to assigns(:question)
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end
@@ -233,9 +233,9 @@ RSpec.describe QuestionsController, type: :controller do
           expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
         end
 
-        it 'redirects to question' do
+        it 'redirects to root path' do
           delete :destroy, params: { id: question }
-          expect(response).to redirect_to assigns(:question)
+          expect(response).to redirect_to root_path
         end
       end
     end

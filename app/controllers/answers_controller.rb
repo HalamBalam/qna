@@ -7,6 +7,11 @@ class AnswersController < ApplicationController
 
   after_action :publish_answer, only: [:create]
 
+  authorize_resource
+
+  skip_authorize_resource :except => [:index, :show, :new, :create, :update, :destroy]
+  skip_authorization_check :except => [:index, :show, :new, :create, :update, :destroy]
+
   def index
   end
 
@@ -26,24 +31,18 @@ class AnswersController < ApplicationController
 
   def update
     @question = @answer.question
-
-    if current_user&.author?(@answer)
-      @answer.update(answer_params)
-    end
+    @answer.update(answer_params)
   end
 
   def destroy
-    if current_user&.author?(@answer)
-      @answer.destroy
-    end
+    @answer.destroy
   end
 
   def mark_as_best
-    @question = @answer.question
+    authorize! :mark_answer_as_best, @answer
 
-    if current_user&.author?(@question)
-      @answer.best!
-    end
+    @question = @answer.question
+    @answer.best!
 
     render 'update'
   end

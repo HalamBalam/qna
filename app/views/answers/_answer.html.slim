@@ -7,13 +7,13 @@ div class="answer-#{answer.id}"
   .answer-rating
     p = "Rating: #{answer.rating}"
 
-  - if current_user&.author?(answer)
+  - if can?(:update, answer)
     p
       =link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
       = " | "
       =link_to 'Delete', answer_path(answer), remote: true, method: :delete, class: 'delete-answer-link', data: { answer_id: answer.id }
 
-  - if current_user&.author?(answer.question) && !answer.best?
+  - if can?(:mark_answer_as_best, answer)
     =link_to 'Mark as best', mark_as_best_answer_path(answer), remote: true, method: :patch
 
   - if answer.best?
@@ -31,18 +31,18 @@ div class="answer-#{answer.id}"
     
     = f.submit 'Save', method: :update
 
-  - if user_signed_in? && !current_user&.author?(answer)
-    .answer-vote-actions
-      - if current_user.voted_for?(answer)
-        = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote hidden"
-        = link_to 're-vote', vote_path(current_user.vote(answer)), class: 'answer-re-vote', remote: true, method: :delete, data: { answer_id: answer.id }
-      - else 
-        = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote"
+  .answer-vote-actions
+    - if can?(:revote, answer)
+      = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote hidden"
+      = link_to 're-vote', vote_path(current_user.vote(answer)), class: 'answer-re-vote', remote: true, method: :delete, data: { answer_id: answer.id }
+      
+    - if can?(:vote, answer) 
+      = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote"
 
 
   = render 'shared/comments', resource: answer
 
-  - if user_signed_in?
+  - if can?(:create, Comment)
     .answer-errors
       = render 'shared/errors', resource: answer
 
