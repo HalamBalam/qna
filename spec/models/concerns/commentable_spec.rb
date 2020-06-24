@@ -2,6 +2,6 @@ require 'rails_helper'
 
 RSpec.shared_examples_for 'commentable' do
 
-  it { should have_many(:comments).dependent(:destroy) }
+  it { should have_many(:comments).order(:created_at).dependent(:destroy) }
 
 end

@@ -14,5 +14,11 @@ FactoryBot.define do
         Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/spec_helper.rb')))
       ] }
     end
+
+    trait :with_links do
+      links_attributes {
+        [{ name: 'google', url: 'https://www.google.ru/' }, { name: 'yandex', url: 'https://yandex.ru/' }]
+      }
+    end
   end
 end

@@ -30,11 +30,11 @@ class CommentsController < ApplicationController
 
     ActionCable.server.broadcast(
       "comments_for_question_#{question_id}",
-      ApplicationController.render(json: { email: @comment.user.email,
-                                           user: @comment.user.id,
-                                           body: @comment.body,
-                                           context: @commentable.class.to_s.downcase,
-                                           commentable_id: @commentable.id } ))
+      { email: @comment.user.email,
+        user: @comment.user.id,
+        body: @comment.body,
+        context: @commentable.class.to_s.downcase,
+        commentable_id: @commentable.id }.to_json )
   end
 
 end

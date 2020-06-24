@@ -1,8 +1,8 @@
 class QuestionsController < ApplicationController
   include Voted
 
-  before_action :authenticate_user!, except: [:index, :show, :partial]
-  before_action :load_question, only: [:show, :update, :destroy, :partial]
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :load_question, only: [:show, :update, :destroy]
 
   after_action :publish_question, only: [:create]
 
