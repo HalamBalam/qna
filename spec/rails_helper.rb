@@ -1,9 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 
-require 'models/concerns/votable_spec.rb'
-require 'models/concerns/commentable_spec.rb'
-require 'controllers/concerns/voted_spec.rb'
 require 'capybara/email/rspec'
 require 'cancan/matchers'
 

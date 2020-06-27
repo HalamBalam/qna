@@ -1,8 +1,4 @@
-require 'rails_helper'
-
-RSpec.shared_examples_for 'voted' do
-  
-  let(:votable) { create(described_class.to_s.gsub(/sController/) { '' }.underscore.to_sym) }
+shared_examples_for 'voted controller' do
   let(:user) { create(:user) }
 
   describe 'PATCH #vote_yes' do

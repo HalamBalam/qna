@@ -5,7 +5,9 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
   let(:user) { create(:user) }
 
-  it_behaves_like 'voted'
+  it_behaves_like 'voted controller' do
+    let(:votable) { question }
+  end
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3) }
@@ -125,86 +127,10 @@ RSpec.describe QuestionsController, type: :controller do
 
 
   describe 'PATCH #update' do
-    let!(:question) { create(:question) }
-
-    context 'authenticated user' do
-      context 'user is the author of the question' do
-        before { login(question.user) }
-
-        context 'with valid attributes' do
-          it 'changes question attributes' do
-            patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-            question.reload
-
-            expect(question.title).to eq 'new title'
-            expect(question.body).to eq 'new body'
-          end
-
-          it 'attaches new files' do
-            expect do
-              files = [
-                Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/rails_helper.rb'))),
-                Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, '/spec/spec_helper.rb')))
-              ]
-              patch :update, params: { id: question, question: { title: question.title, body: question.body, files: files } }, format: :js
-              question.reload
-
-            end.to change(question.files, :count).by(2)
-          end
-
-          it 'renders update view' do
-            patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js  
-            expect(response).to render_template :update
-          end
-        end
-
-        context 'with invalid attributes' do
-          it 'does not change question attributes' do
-            expect do
-              patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
-              question.reload
-            end.to_not change(question, :body)
-          end
-
-          it 'renders update view' do
-            patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js  
-            expect(response).to render_template :update
-          end
-        end
-
-      end
-
-      context 'user is not the author of the question' do
-        before { login(user) }
-
-        it 'does not change question attributes' do
-          expect do
-            patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-            question.reload
-          end.to_not change(question, :body)
-        end
-
-        it 'returns 403 status' do
-          patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-          expect(response).to have_http_status(:forbidden)
-        end
-      end
+    it_behaves_like 'updated controller' do
+      let(:resource) { :question }
+      let(:updated_attributes) { { title: 'new title', body: 'new body' } }
     end
-
-    context 'unauthenticated user' do
-      it 'does not change question attributes' do
-        expect do
-          patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-          question.reload
-        end.to_not change(question, :body)
-      end
-
-      it 'returnes unauthorized error' do
-        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }, format: :js
-        expect(response).to be_unauthorized
-      end
-    end
-
   end
 
 

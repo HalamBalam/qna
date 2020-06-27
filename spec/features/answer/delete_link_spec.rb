@@ -5,43 +5,12 @@ feature 'User can delete links from his answer', %q{
   As an author of answer
   I'd like to be able to remove links
 } do
-
   given!(:user) { create(:user) }
   given!(:question) { create(:question) }
-  given!(:answer) { create(:answer, question: question) }
-  given!(:link) { create(:link, linkable: answer) }
-
   
-  scenario 'Unauthenticated user can not delete links', js: true do
-    visit question_path(question)
-
-    within '.answers' do
-      expect(page).to_not have_link 'Remove link'
-    end
+  it_behaves_like 'deleting links' do
+    given!(:linkable) { create(:answer, question: question) }
+    given(:path) { question_path(question) }
+    given(:html_class) { '.answers' }
   end
-
-
-  scenario 'Authenticated user deletes link from his answer', js: true do
-    sign_in answer.user
-    visit question_path(question)
-
-    within '.answers' do
-      expect(page).to have_link 'Thinknetica'
-
-      click_on 'Remove link' 
-
-      expect(page).to_not have_link 'Thinknetica' 
-    end
-  end
-
-
-  scenario "Authenticated user can not delete a link from another user's answer", js: true do
-    sign_in user
-    visit question_path(question) 
-
-    within '.answers' do
-      expect(page).to_not have_link 'Remove link'
-    end 
-  end
-
 end
