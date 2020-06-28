@@ -1,6 +1,6 @@
 shared_examples_for 'API Changeable' do
   context 'authorized' do
-    let(:access_token) { create(:access_token) }
+    let(:access_token) { create(:access_token, resource_owner_id: changeable.user.id) }
     let(:model_klass) { resource.to_s.classify.constantize }
 
     describe 'with valid attributes' do

@@ -2,12 +2,43 @@ require 'rails_helper'
 
 RSpec.describe LinksController, type: :controller do
   let!(:user) { create(:user) }
+  let!(:linkable) { create(:answer) }
+  let!(:link) { create(:link, linkable: linkable) }
 
-  it_behaves_like 'deleted links' do
-    let(:resource) { :question }
+  context 'user is the author of the linkable' do
+    before { login(linkable.user) }
+
+    it 'deletes a link' do
+      expect { delete :destroy, params: { id: link }, format: :js }.to change(linkable.links, :count).by(-1)
+    end
+
+    it 'renders update view' do
+      delete :destroy, params: { id: link }, format: :js  
+      expect(response).to render_template :update
+    end
   end
 
-  it_behaves_like 'deleted links' do
-    let(:resource) { :answer }
+  context 'user is not the author of the linkable' do
+    before { login(user) }
+
+    it 'does not delete a link' do
+      expect { delete :destroy, params: { id: link }, format: :js }.to_not change(linkable.links, :count)
+    end
+
+    it 'returns 403 status' do
+      delete :destroy, params: { id: link }, format: :js
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  context 'unauthenticated user' do
+    it 'does not delete a link' do
+      expect { delete :destroy, params: { id: link }, format: :js }.to_not change(linkable.links, :count)
+    end
+
+    it 'returnes unauthorized error' do
+      delete :destroy, params: { id: link }, format: :js
+      expect(response).to be_unauthorized
+    end
   end
 end
