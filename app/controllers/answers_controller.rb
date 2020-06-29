@@ -62,11 +62,11 @@ class AnswersController < ApplicationController
     
     ActionCable.server.broadcast(
       "answers_for_question_#{@answer.question.id}",
-      ApplicationController.render(json: { id: @answer.id,
-                                           user: @answer.user.id,
-                                           author_of_question: @answer.question.user.id,
-                                           html: ApplicationController.render(partial: 'answers/answer_cable', locals: { answer: @answer }) 
-                                         } ))
+      { id: @answer.id,
+        user: @answer.user.id,
+        author_of_question: @answer.question.user.id,
+        html: ApplicationController.render(partial: 'answers/answer_cable', locals: { answer: @answer }) 
+      }.to_json )
   end
 
   def answer_params

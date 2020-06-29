@@ -29,6 +29,10 @@ class Ability
       can :mark_answer_as_best, Answer do |answer|
         user.author?(answer.question) && !answer.best?
       end
+
+      can :read_owner, User do |owner|
+        owner.id == user.id
+      end
     end
   end
 end

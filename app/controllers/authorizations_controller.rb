@@ -1,5 +1,4 @@
 class AuthorizationsController < ApplicationController
-
   skip_authorization_check
   
   def create
