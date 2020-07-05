@@ -33,6 +33,14 @@ class Ability
       can :read_owner, User do |owner|
         owner.id == user.id
       end
+
+      can :subscribe, Question do |question|
+        user.subscriptions.where(question: question).empty?
+      end
+
+      can :unsubscribe, Question do |question|
+        user.subscriptions.where(question: question).present?
+      end
     end
   end
 end

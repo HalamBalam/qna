@@ -51,7 +51,9 @@
       
       - if can?(:vote, @question)
         = render 'vote_actions', vote_class: 'question-vote'
-                
+    
+    = render 'subscription_actions'
+
   
   = render 'shared/comments', resource: @question
 

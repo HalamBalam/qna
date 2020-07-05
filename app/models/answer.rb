@@ -13,12 +13,20 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
+  after_create :notify_question_subscribers
+
   def best!
     transaction do
       question.answers.update_all(best: false)
       update!(best: true)
       user.rewards << question.reward if question.reward.present? 
     end
+  end
+
+  private
+
+  def notify_question_subscribers
+    NotificationJob.perform_later(question)
   end
 
 end

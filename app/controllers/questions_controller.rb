@@ -16,7 +16,11 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @answer.links.new
 
-    gon.current_user = current_user.id if user_signed_in?
+    if user_signed_in?
+      @subscription = current_user.subscriptions.where(question: @question).first
+      gon.current_user = current_user.id
+    end
+    
     gon.question_id = @question.id
   end
 
