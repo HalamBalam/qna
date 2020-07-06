@@ -7,6 +7,7 @@ class Question < ApplicationRecord
   has_one :reward, dependent: :destroy
   has_many :answers, -> { order(best: :desc, created_at: :desc) }, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
+  has_many :subscriptions, dependent: :destroy
   
   has_many_attached :files
 
@@ -20,6 +21,6 @@ class Question < ApplicationRecord
   private
 
   def subscribe_the_author
-    Subscription.create!(user: user, question: self)
+    subscriptions.create!(user: user)
   end
 end

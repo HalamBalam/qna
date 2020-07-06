@@ -31,4 +31,11 @@ feature 'Users can subscribe to any question they like', %q{
     expect(page).to have_link 'subscribe!'
     expect(page).to_not have_link 'unsubscribe'
   end
+
+  scenario 'unauthenticated user could not subscribe', js: true do
+    visit question_path(question)
+
+    expect(page).to_not have_link 'subscribe!'
+    expect(page).to_not have_link 'unsubscribe'
+  end
 end
