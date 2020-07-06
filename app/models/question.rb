@@ -7,6 +7,7 @@ class Question < ApplicationRecord
   has_one :reward, dependent: :destroy
   has_many :answers, -> { order(best: :desc, created_at: :desc) }, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
+  has_many :subscriptions, dependent: :destroy
   
   has_many_attached :files
 
@@ -14,4 +15,12 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :reward, reject_if: :all_blank
 
   validates :title, :body, presence: true
+
+  after_create :subscribe_the_author
+
+  private
+
+  def subscribe_the_author
+    subscriptions.create!(user: user)
+  end
 end

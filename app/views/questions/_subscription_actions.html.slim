@@ -1,0 +1,6 @@
+.question-subscribtion-actions
+  - if can?(:subscribe, @question)
+    p = link_to 'subscribe!', question_subscriptions_path(@question), remote: true, method: :post
+
+  - if can?(:unsubscribe, @question)
+    p = link_to 'unsubscribe', subscription_path(@subscription), remote: true, method: :delete

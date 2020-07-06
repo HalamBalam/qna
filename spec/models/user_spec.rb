@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-
   let(:answer) { create(:answer) }
   let(:question) { create(:question) }
   let(:user) { create(:user) }
@@ -11,6 +10,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:rewards) }
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:authorizations).dependent(:destroy) }
+  it { should have_many(:subscriptions).dependent(:destroy) }
 
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
@@ -47,5 +47,4 @@ RSpec.describe User, type: :model do
       expect(user.vote(question)).to eq vote  
     end
   end
-
 end

@@ -12,6 +12,7 @@ RSpec.describe Ability do
 
   describe 'for user' do
     let(:user) { create(:user) }
+    let(:subscription) { create(:subscription, user: user) }
 
     it_behaves_like 'model ability' do
       let(:resource) { :question }
@@ -25,9 +26,14 @@ RSpec.describe Ability do
     it { should be_able_to :read, :all }
 
     it { should be_able_to :create, Comment }
-
+    
     it { should be_able_to     :mark_answer_as_best, create(:answer, question: create(:question, user: user)) }
     it { should_not be_able_to :mark_answer_as_best, create(:answer) }
     it { should_not be_able_to :mark_answer_as_best, create(:answer, question: create(:question, user: user), best: true) }
+
+    it { should be_able_to     :subscribe,   create(:question) }
+    it { should_not be_able_to :subscribe,   create(:question, user: user) }
+    it { should be_able_to     :unsubscribe, create(:question, user: user) }
+    it { should_not be_able_to :unsubscribe, create(:question) }
   end
 end
