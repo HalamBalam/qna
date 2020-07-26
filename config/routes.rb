@@ -29,10 +29,10 @@ Rails.application.routes.draw do
     resources :subscriptions, only: [:create]
   end
 
-  resources :attachments, only: [:destroy]
-  resources :links,       only: [:destroy]
-  resources :rewards,     only: [:index]
-  resources :votes,       only: [:destroy]
+  resources :attachments,   only: [:destroy]
+  resources :links,         only: [:destroy]
+  resources :rewards,       only: [:index]
+  resources :votes,         only: [:destroy]
   resources :subscriptions, only: [:destroy]
 
   resources :authorizations, only: [:create] do
@@ -52,6 +52,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  get '/search', to: 'search#search'
 
   mount ActionCable.server => '/cable'
 
