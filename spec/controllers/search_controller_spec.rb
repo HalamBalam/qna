@@ -20,23 +20,32 @@ RSpec.describe SearchController, type: :controller do
     
 
     context 'with filled query' do
-      before { get :search, params: { scope: 'all', q: 'test' } }
+      let(:service) { double('Services::FulltextSearch') }
 
       it 'searches in database' do
+        get :search, params: { scope: 'all', q: 'test' }
         expect(assigns(:result)).to be
       end
 
       it 'sets instance variables' do
+        get :search, params: { scope: 'all', q: 'test' }
         expect(assigns(:scope)).to eq 'all'
         expect(assigns(:query)).to eq 'test'
-        expect(assigns(:page)).to eq 1
+      end
+
+      it 'calls Services::FulltextSearch' do
+        allow(Services::FulltextSearch).to receive(:new).and_return(service)
+        expect(service).to receive(:call)
+        get :search, params: { scope: 'all', q: 'test' }
       end
 
       it 'returns success' do
+        get :search, params: { scope: 'all', q: 'test' }
         expect(response).to have_http_status(:success)
       end
 
       it 'renders search view' do
+        get :search, params: { scope: 'all', q: 'test' }
         expect(response).to render_template :search  
       end
     end
