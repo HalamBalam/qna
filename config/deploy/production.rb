@@ -4,7 +4,7 @@
 # You can define all roles on a single server, or split them:
 
 server "82.148.29.174", user: "deployer", roles: %w{app db web}, primary: true
-set :rail_env, :production
+set :rails_env, :production
 
 
 
