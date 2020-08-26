@@ -1,56 +1,57 @@
-= "-------------------------------------------"
-div class="answer-#{answer.id}"
-  p= answer.body
-  = render 'shared/attached', resource: answer
-  = render 'shared/links', resource: answer
-  
-  .answer-rating
-    p = "Rating: #{answer.rating}"
-
-  - if can?(:update, answer)
-    p
-      =link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-      = " | "
-      =link_to 'Delete', answer_path(answer), remote: true, method: :delete, class: 'delete-answer-link', data: { answer_id: answer.id }
-
-  - if can?(:mark_answer_as_best, answer)
-    =link_to 'Mark as best', mark_as_best_answer_path(answer), remote: true, method: :patch
-
-  - if answer.best?
-    | This answer is the best!
-
-  = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-    p
-      = f.label :body, 'Your answer'
-      = f.text_area :body
-    p
-      = f.label :files
-      = f.file_field :files, multiple: true, direct_upload: true
-
-    = render 'shared/new_links', f: f
+- cache object_cache_key_for(answer, current_user) do
+  = "-------------------------------------------"
+  div class="answer-#{answer.id}"
+    p= answer.body
+    = render 'shared/attached', resource: answer
+    = render 'shared/links', resource: answer
     
-    = f.submit 'Save', method: :update
+    .answer-rating
+      p = "Rating: #{answer.rating}"
 
-  .answer-vote-actions
-    - if can?(:revote, answer)
-      = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote hidden"
-      = link_to 're-vote', vote_path(current_user.vote(answer)), class: 'answer-re-vote', remote: true, method: :delete, data: { answer_id: answer.id }
+    - if can?(:update, answer)
+      p
+        =link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+        = " | "
+        =link_to 'Delete', answer_path(answer), remote: true, method: :delete, class: 'delete-answer-link', data: { answer_id: answer.id }
+
+    - if can?(:mark_answer_as_best, answer)
+      =link_to 'Mark as best', mark_as_best_answer_path(answer), remote: true, method: :patch
+
+    - if answer.best?
+      | This answer is the best!
+
+    = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+      p
+        = f.label :body, 'Your answer'
+        = f.text_area :body
+      p
+        = f.label :files
+        = f.file_field :files, multiple: true, direct_upload: true
+
+      = render 'shared/new_links', f: f
       
-    - if can?(:vote, answer) 
-      = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote"
+      = f.submit 'Save', method: :update
+
+    .answer-vote-actions
+      - if can?(:revote, answer)
+        = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote hidden"
+        = link_to 're-vote', vote_path(current_user.vote(answer)), class: 'answer-re-vote', remote: true, method: :delete, data: { answer_id: answer.id }
+        
+      - if can?(:vote, answer) 
+        = render 'answers/vote_actions', answer: answer, vote_class: "answer-vote"
 
 
-  = render 'shared/comments', resource: answer
+    = render 'shared/comments', resource: answer
 
-  - if can?(:create, Comment)
-    .answer-errors
-      = render 'shared/errors', resource: answer
+    - if can?(:create, Comment)
+      .answer-errors
+        = render 'shared/errors', resource: answer
 
-    = form_with model: [answer, Comment.new], class: 'hidden', html: { id: "new-answer-comment-#{answer.id}" } do |f|
-      p = f.label :body, 'Comment'
-      p = f.text_area :body
-      
-      p = f.submit
+      = form_with model: [answer, Comment.new], class: 'hidden', html: { id: "new-answer-comment-#{answer.id}" } do |f|
+        p = f.label :body, 'Comment'
+        p = f.text_area :body
+        
+        p = f.submit
 
-    =link_to 'Add comment', '#', class: 'comment-answer-link', data: { answer_id: answer.id }
+      =link_to 'Add comment', '#', class: 'comment-answer-link', data: { answer_id: answer.id }
 

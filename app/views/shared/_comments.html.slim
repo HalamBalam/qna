@@ -1,3 +1,4 @@
 .comments
   - resource.comments.each do |comment|
-    p = "\##{comment.user.email}: #{comment.body}"
+    - cache comment do
+      p = "\##{comment.user.email}: #{comment.body}"
