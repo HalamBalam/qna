@@ -1,81 +1,82 @@
 = include_gon
 
-.question
-  .question-errors
-    = render 'shared/errors', resource: @question
-  
-  .question-attributes
-    h1= @question.title
-    p= @question.body
-
-    = render 'shared/attached', resource: @question
+-cache object_cache_key_for(@question, current_user) do
+  .question
+    .question-errors
+      = render 'shared/errors', resource: @question
     
-    - if @question.reward.present?
-      p Reward
-      p
-        = @question.reward.name
-      p
-        = link_to @question.reward.image.filename.to_s, url_for(@question.reward.image)
+    .question-attributes
+      h1= @question.title
+      p= @question.body
 
-    = render 'shared/links', resource: @question
-    .question-rating
-      p = "Rating: #{@question.rating}"
+      = render 'shared/attached', resource: @question
+      
+      - if @question.reward.present?
+        p Reward
+        p
+          = @question.reward.name
+        p
+          = link_to @question.reward.image.filename.to_s, url_for(@question.reward.image)
 
-  .question-actions
-    - if can?(:edit, @question)
-      = form_with model: @question, class: 'hidden', html: { id: 'edit-question' } do |f|
-        p
-          = f.label :title, 'New title'
-          = f.text_field :title
-        p
-          = f.label :body, 'New body'
-          = f.text_area :body
-        p
-          = f.label :files
-          = f.file_field :files, multiple: true, direct_upload: true
+      = render 'shared/links', resource: @question
+      .question-rating
+        p = "Rating: #{@question.rating}"
 
-        = render 'shared/new_links', f: f
+    .question-actions
+      - if can?(:edit, @question)
+        = form_with model: @question, class: 'hidden', html: { id: 'edit-question' } do |f|
+          p
+            = f.label :title, 'New title'
+            = f.text_field :title
+          p
+            = f.label :body, 'New body'
+            = f.text_area :body
+          p
+            = f.label :files
+            = f.file_field :files, multiple: true, direct_upload: true
+
+          = render 'shared/new_links', f: f
+          
+          p= f.submit 'Save', method: :update
+
+        p
+          =link_to 'Edit question', '#', class: 'edit-question-link'
+          = " | "
+          =link_to 'Delete question', question_path(@question), method: :delete
+      
         
-        p= f.submit 'Save', method: :update
+      .question-vote-actions
+        - if can?(:revote, @question)
+          = render 'vote_actions', vote_class: 'question-vote hidden'
+          = link_to 're-vote', vote_path(current_user.vote(@question)), class: 'question-re-vote', remote: true, method: :delete
+        
+        - if can?(:vote, @question)
+          = render 'vote_actions', vote_class: 'question-vote'
+      
+      = render 'subscription_actions'
 
-      p
-        =link_to 'Edit question', '#', class: 'edit-question-link'
-        = " | "
-        =link_to 'Delete question', question_path(@question), method: :delete
     
-      
-    .question-vote-actions
-      - if can?(:revote, @question)
-        = render 'vote_actions', vote_class: 'question-vote hidden'
-        = link_to 're-vote', vote_path(current_user.vote(@question)), class: 'question-re-vote', remote: true, method: :delete
-      
-      - if can?(:vote, @question)
-        = render 'vote_actions', vote_class: 'question-vote'
-    
-    = render 'subscription_actions'
+    = render 'shared/comments', resource: @question
 
-  
-  = render 'shared/comments', resource: @question
+    - if can?(:create, Comment)
+      = form_with model: [@question, @question.comments.new], class: 'hidden', html: { id: "new-question-comment" } do |f|
+        p = f.label :body, 'Comment'
+        p = f.text_area :body
+        
+        p = f.submit
 
-  - if can?(:create, Comment)
-    = form_with model: [@question, @question.comments.new], class: 'hidden', html: { id: "new-question-comment" } do |f|
-      p = f.label :body, 'Comment'
-      p = f.text_area :body
-      
-      p = f.submit
+      =link_to 'Add comment', '#', class: 'comment-question-link'
+      br = ""
 
-    =link_to 'Add comment', '#', class: 'comment-question-link'
-    br = ""
+  .answers
+    h2 Answers
+    = render @question.answers, question: @question
 
-.answers
-  h2 Answers
-  = render @question.answers, question: @question
+    - if can?(:create, Answer)
+      .answer-errors
+        = render 'shared/errors', resource: @answer
 
   - if can?(:create, Answer)
-    .answer-errors
-      = render 'shared/errors', resource: @answer
+    = render 'answers/form', question: @question, answer: @answer
 
-- if can?(:create, Answer)
-  = render 'answers/form', question: @question, answer: @answer
-
-= link_to 'Back', questions_path
+  = link_to 'Back', questions_path
